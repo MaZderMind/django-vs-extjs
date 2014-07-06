@@ -15,9 +15,8 @@ Ext.define('MyApp.view.Login', {
 	defaultFocus: 'user',
 
 	listeners: {
-		// save the scope
-
 		afterRender: function() {
+			// save the scope
 			var submitButton = this.down('#submit');
 
 			// register keyboard handler
