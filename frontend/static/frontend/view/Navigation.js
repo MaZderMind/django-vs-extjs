@@ -2,17 +2,20 @@ Ext.define('MyApp.view.Navigation', {
 	layout: 'border',
 	extend: 'Ext.container.Container',
 	renderTo: Ext.getBody(),
-	//extend: 'Ext.window.Window',
+	id: "navigationContainer",
+
 	width: '100%',
 	height: '100%',
 
 	items: [{
 		region: 'west',
 		xtype: 'treepanel',
-		itemId: 'navPanel',
+		itemId: 'navTree',
 
 		width: 200,
 		split: true,
+
+		rootVisible: false,
 
 		title: 'Navigation',
 		tbar: [
@@ -27,8 +30,7 @@ Ext.define('MyApp.view.Navigation', {
 		layout: 'card',
 
 		items: [
-			{ title: 'Card 1', html: 'Card 1' },
-			{ title: 'Card 2', html: 'Card 2' }
+			{ title: 'Welcome-Page', html: 'I\'m a Welcome-Page' }
 		]
 	}]
 });

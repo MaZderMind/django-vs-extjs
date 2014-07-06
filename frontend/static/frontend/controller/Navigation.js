@@ -37,6 +37,16 @@ Ext.define('MyApp.controller.Navigation', {
 					});
 
 				}
+			},
+
+			'#navTree': {
+				itemclick: function(tree, node) {
+					// ignore clicks on group nodes
+					// TODO: pass click on to first sub-item
+					if(!node.data.leaf) return;
+
+					this.getContentPanel().setActiveItem(node.data.itemId);
+				}
 			}
 		})
 	},
@@ -49,5 +59,28 @@ Ext.define('MyApp.controller.Navigation', {
 	updateUserinfo: function(userinfo) {
 		this.getLoginMessage().setData(userinfo);
 		return this;
+	},
+
+	registerNavigationItem: function(group, item, view) {
+		view.itemId = group+'.'+item;
+		this.getContentPanel().add(view);
+
+		var root = this.getNavTree().store.getRootNode();
+
+		var groupNode = root.findChild('itemId', group);
+		if(!groupNode) {
+			groupNode = root.appendChild(root.createNode({
+				leaf: false,
+				expanded: true,
+				text: group,
+				itemId: group
+			}));
+		}
+
+		groupNode.appendChild(root.createNode({
+			leaf: true,
+			text: item,
+			itemId: view.itemId
+		}));
 	}
 });

@@ -1,7 +1,7 @@
 Ext.application({
 	name: 'MyApp',
 	appFolder : '/static/frontend',
-	controllers: ['Login', 'Navigation'],
+	controllers: ['Login', 'Navigation', 'Polls'],
 
 	launch: function () {
 		// save the scope
