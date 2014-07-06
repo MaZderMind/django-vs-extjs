@@ -21,8 +21,19 @@ Ext.define('MyApp.controller.Login', {
 			loginController.precessLogin(username, password, function(success) {
 				if(success) {
 					// the user was successfully authorized
-					// raise a event on the controller
-					loginController.fireEvent('success', username);
+					// no request additional information on the user (name and such)
+					loginController.fetchLoginStatus(function(userinfo) {
+						// raise a event on the controller
+						if(userinfo) {
+							win.hide();
+							loginController.fireEvent('success', userinfo);
+						}
+						else {
+							// this sould not fail, but if it does, just handle it like a failed login
+							win.unmask();
+							win.clearPasswordAndFocus().showError('Invalid Username or Password!');
+						}
+					})
 				}
 				else {
 					// nope, unmask the form, show an error message and restart login process
@@ -41,13 +52,11 @@ Ext.define('MyApp.controller.Login', {
 		var loginController = this;
 
 		// test if the backend knows us
-		loginController.testLoginStatus(function(username) {
-			// store the retrieved username
-			loginController.username = username;
-
-			// analyze if a user is logged in and callback, if she is
-			if(username) {
-				return callback(username);
+		loginController.fetchLoginStatus(function(userinfo) {
+			// analyze if a user is logged in
+			if(userinfo) {
+				// callback, if she is
+				return callback(userinfo);
 			}
 
 			// no, we're not. show the login-window
@@ -65,15 +74,21 @@ Ext.define('MyApp.controller.Login', {
 	},
 
 	// ask the backend if and which user is currently logged in
-	testLoginStatus: function(callback) {
-		console.info('requesting current username from backend');
+	fetchLoginStatus: function(callback) {
+		console.info('requesting current userinfo from backend');
 		Ext.Ajax.request({
-			url: '/username/',
-			success: function(response){
-				var username = Ext.util.JSON.decode(response.responseText);
+			url: '/api/auth/user/',
+			success: function(response) {
+				var userinfo = Ext.util.JSON.decode(response.responseText);
+
 				// callback with the decoded response
-				console.log('received username-info:', username);
-				callback(username);
+				console.log('received userinfo:', userinfo);
+				callback(userinfo);
+			},
+			failure: function(response) {
+				// callback without info
+				console.log('received no userinfo - nobody logged in');
+				callback();
 			}
 		});
 	},
@@ -81,16 +96,19 @@ Ext.define('MyApp.controller.Login', {
 	precessLogin: function(username, password, callback) {
 		console.info('trying to log into backend with username=', username, 'password=', password.length, 'Chars');
 		Ext.Ajax.request({
-			url: '/api-auth/login/',
-			data: {
-				username: username,
-				password: password
+			url: '/api/auth/login/',
+			method: 'POST',
+			params: {
+				'username': username,
+				'password': password
 			},
-			success: function(response){
-				alert('success');
+			success: function(){
+				callback(true);
+			},
+			failure: function() {
+				callback(false);
 			}
 		});
-		callback(false);
 	},
 
 	isLoggedIn: function() {

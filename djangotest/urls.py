@@ -21,8 +21,11 @@ urlpatterns = patterns('',
 	url(r'^admin/', include(admin.site.urls)),
 
 	# provide a login-link in the browsable api
-	url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+	url(r'^api/ui-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
-	# base for the browsable api
+	# login for rest-api
+	url(r'^api/auth/', include('rest_auth.urls')),
+
+	# base for the browsable- the rest-api
 	url(r'^api/', include(restrouter.urls)),
 )
