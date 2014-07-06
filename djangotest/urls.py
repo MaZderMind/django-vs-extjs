@@ -15,7 +15,7 @@ pollsapi.register(restrouter)
 # root-level url patterns
 urlpatterns = patterns('',
 	# frontpage
-	#url(r'^', ...),
+	url(r'^', include('frontend.urls')),
 
 	# admin-ui
 	url(r'^admin/', include(admin.site.urls)),
