@@ -11,7 +11,6 @@ Ext.application({
 		app.getController('Login').ensureLoggedIn(function(userinfo) {
 			console.info('Login-Controller ensured that user', userinfo.user.username, 'is is currently loggeg in. Proceeding to navigation.')
 			app.getController('Navigation')
-				.create()
 				.updateUserinfo(userinfo)
 				.show();
 		});

@@ -1,6 +1,10 @@
 Ext.define('MyApp.view.Navigation', {
-	extend: 'Ext.container.Viewport',
 	layout: 'border',
+	extend: 'Ext.container.Container',
+	renderTo: Ext.getBody(),
+	//extend: 'Ext.window.Window',
+	width: '100%',
+	height: '100%',
 
 	items: [{
 		region: 'west',

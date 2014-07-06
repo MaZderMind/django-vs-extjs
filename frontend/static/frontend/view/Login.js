@@ -1,5 +1,6 @@
 Ext.define('MyApp.view.Login', {
 	extend: 'Ext.window.Window',
+	renderTo: Ext.getBody(),
 	title: 'Login',
 	width: 400,
 	layout: 'form',

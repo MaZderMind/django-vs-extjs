@@ -12,6 +12,9 @@ Ext.define('MyApp.controller.Navigation', {
 		// save scope
 		var navigationController = this;
 
+		// instanciate view class but hide initially
+		this.view = this.getView('Navigation').create().hide();
+
 		this.control({
 			'#logoutButton': {
 				click: function() {
@@ -27,7 +30,7 @@ Ext.define('MyApp.controller.Navigation', {
 
 						// destroy main viewport and all content
 						navigationController.view.unmask();
-						navigationController.view.destroy();
+						navigationController.view.hide();
 
 						// relaunch our application
 						MyApp.getApplication().launch();
@@ -36,11 +39,6 @@ Ext.define('MyApp.controller.Navigation', {
 				}
 			}
 		})
-	},
-
-	create: function() {
-		this.view = this.getView('Navigation').create().hide();
-		return this;
 	},
 
 	show: function() {
