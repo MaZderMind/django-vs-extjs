@@ -3,7 +3,11 @@ Ext.define('MyApp.controller.Login', {
 	mixins: ['Ext.mixin.Observable'],
 	views: ['Login'],
 
-	username: null,
+	refs: [
+		{ 'ref': 'userField', selector: '#user' },
+		{ 'ref': 'passField', selector: '#pass' },
+		{ 'ref': 'submitButton', selector: '#submit' }
+	],
 
 	init: function() {
 		// save the scope
@@ -18,7 +22,7 @@ Ext.define('MyApp.controller.Login', {
 			win.mask('Verifying…');
 
 			// process the login with the backend
-			loginController.precessLogin(username, password, function(success) {
+			loginController.performLogin(username, password, function(success) {
 				if(success) {
 					// the user was successfully authorized
 					// no request additional information on the user (name and such)
@@ -31,14 +35,14 @@ Ext.define('MyApp.controller.Login', {
 						else {
 							// this sould not fail, but if it does, just handle it like a failed login
 							win.unmask();
-							win.clearPasswordAndFocus().showError('Invalid Username or Password!');
+							loginController.clearPasswordAndFocus().setPasswordError('Invalid Username or Password!');
 						}
 					})
 				}
 				else {
 					// nope, unmask the form, show an error message and restart login process
 					win.unmask();
-					win.clearPasswordAndFocus().showError('Invalid Username or Password!');
+					loginController.clearPasswordAndFocus().showError('Invalid Username or Password!');
 				}
 			})
 		});
@@ -70,6 +74,7 @@ Ext.define('MyApp.controller.Login', {
 
 			// initiate login procedure by showing the login window
 			loginController.loginWindow.show();
+			loginController.clearForm();
 		});
 	},
 
@@ -93,7 +98,7 @@ Ext.define('MyApp.controller.Login', {
 		});
 	},
 
-	precessLogin: function(username, password, callback) {
+	performLogin: function(username, password, callback) {
 		console.info('trying to log into backend with username=', username, 'password=', password.length, 'Chars');
 		Ext.Ajax.request({
 			url: '/api/auth/login/',
@@ -111,6 +116,20 @@ Ext.define('MyApp.controller.Login', {
 		});
 	},
 
+	performLogout: function(callback) {
+		console.info('trying to log out from backend');
+		Ext.Ajax.request({
+			url: '/api/auth/logout/',
+			method: 'GET',
+			success: function(){
+				callback(true);
+			},
+			failure: function() {
+				callback(false);
+			}
+		});
+	},
+
 	isLoggedIn: function() {
 		// null -> false, string -> true
 		return !!this.username;
@@ -118,5 +137,23 @@ Ext.define('MyApp.controller.Login', {
 	
 	getUsername: function() {
 		return this.username;
+	},
+
+	clearForm: function() {
+		this.loginWindow.unmask();
+		this.getPassField().setValue('').unsetActiveError();
+		this.getUserField().setValue('').unsetActiveError();
+		this.getUserField().focus();
+		return this;
+	},
+
+	clearPasswordAndFocus: function() {
+		this.getPassField().setValue('').focus();
+		return this;
+	},
+
+	setPasswordError: function(msg) {
+		this.getPassField().setActiveErrors([msg]);
+		return this;
 	}
 });

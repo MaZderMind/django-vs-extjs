@@ -11,16 +11,6 @@ Ext.define('MyApp.view.Login', {
 
 	defaultFocus: 'user',
 
-	clearPasswordAndFocus: function() {
-		this.down('#pass').setValue('').focus();
-		return this;
-	},
-
-	showError: function(msg) {
-		this.down('#pass').setActiveErrors([msg]);
-		return this;
-	},
-
 	listeners: {
 		// save the scope
 
