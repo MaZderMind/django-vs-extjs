@@ -1,13 +1,63 @@
 Ext.define('MyApp.view.Login', {
 	extend: 'Ext.window.Window',
 	title: 'Login',
-	height: 200,
 	width: 400,
-	layout: 'fit',
-	items: {  // Let's put an empty grid in just to illustrate fit layout
-		xtype: 'grid',
-		border: false,
-		columns: [{header: 'World'}],                 // One header just for show. There's no data,
-		store: Ext.create('Ext.data.ArrayStore', {}) // A dummy empty data store
-	}
+	layout: 'form',
+	bodyPadding: 5,
+
+	closable: false,
+	resizable: false,
+	draggable: false,
+
+	defaultFocus: 'user',
+
+	clearPasswordAndFocus: function() {
+		this.down('#pass').setValue('').focus();
+		return this;
+	},
+
+	showError: function(msg) {
+		this.down('#pass').setActiveErrors([msg]);
+		return this;
+	},
+
+	listeners: {
+		// save the scope
+
+		afterRender: function() {
+			var submitButton = this.down('#submit');
+
+			// register keyboard handler
+			this.nav = new Ext.KeyNav(this.getEl(), {
+				enter: Ext.bind(submitButton.handler, submitButton)
+			});
+		}
+	},
+
+	defaultType: 'textfield',
+	items: [{
+		itemId: 'user',
+		fieldLabel: 'Username',
+		allowBlank: false
+	},{
+		inputType: 'password',
+		fieldLabel: 'Password',
+		itemId: 'pass',
+		allowBlank: false
+	}],
+
+	buttons: [{
+		text: 'Login',
+		itemId: 'submit',
+		handler: function() {
+			// get a reference to the window
+			var win = this.up('window');
+
+			// trigger a login-click on the window with the entered values
+			win.fireEvent('login-click',
+				win.down('#user').getValue(),
+				win.down('#pass').getValue()
+			);
+		}
+	}]
 });

@@ -1,7 +1,3 @@
-Ext.require([
-	'Ext.application',
-]);
-
 Ext.application({
 	name: 'MyApp',
 	appFolder : '/static/frontend',
