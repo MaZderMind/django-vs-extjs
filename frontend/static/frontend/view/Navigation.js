@@ -4,6 +4,7 @@ Ext.define('MyApp.view.Navigation', {
 	renderTo: Ext.getBody(),
 	id: "navigationContainer",
 
+	// todo: not resizing correctly
 	width: '100%',
 	height: '100%',
 

@@ -3,7 +3,10 @@ Ext.define('MyApp.store.Polls', {
 	extend: 'Ext.data.Store',
 
 	remoteSort: true,
-	remoteFilter: true, // todo: test!!
+
+	// das django rest framework kann nur auf gleichheit filtern, das reicht aber für extjs nicht.
+	// sollte im backend eingebaut sein um effizient auch mit großen listen arbeiten zu können
+	//remoteFilter: true,
 
 	// über 3g sollte man ggf. nur alle 5 sekunden syncen oder so
 	autoSync: true,
