@@ -1,6 +1,19 @@
 Ext.define('MyApp.view.Polls', {
-	extend: 'Ext.panel.Panel',
+	extend: 'Ext.grid.Panel',
 	id: 'polls',
 	title: 'Polls',
-	html: 'some poll content'
+
+	store: 'Polls',
+	autoLoad: true,
+
+	dockedItems: [{
+		xtype: 'pagingtoolbar',
+		dock: 'bottom',
+		displayInfo: true
+	}],
+
+	columns: [
+		{ text: 'Question',  dataIndex: 'question', flex: 1 },
+		{ text: 'Publication-Date', dataIndex: 'pub_date', width: 200 }
+	]
 });

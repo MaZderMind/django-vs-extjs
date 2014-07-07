@@ -1,6 +1,7 @@
 Ext.define('MyApp.controller.Polls', {
 	extend: 'Ext.app.Controller',
 	views: ['Polls'],
+	stores:['Polls'],
 
 	init: function() {
 		this.view = this.getView('Polls').create();
