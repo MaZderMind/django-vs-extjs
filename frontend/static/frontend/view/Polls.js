@@ -8,6 +8,7 @@ Ext.define('MyApp.view.Polls', {
 	dockedItems: [{
 		xtype: 'pagingtoolbar',
 		dock: 'bottom',
+		store: 'Polls',
 		displayInfo: true
 	}],
 
