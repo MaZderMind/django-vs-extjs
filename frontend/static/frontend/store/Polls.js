@@ -1,11 +1,12 @@
 Ext.define('MyApp.store.Polls', {
+	requires: ['MyApp.helper.DjangoProxy'],
 	extend: 'Ext.data.Store',
 
 	remoteSort: true,
 	remoteFilter: true, // todo: test!!
 
 	proxy: {
-		type: 'rest',
+		type: 'django',
 		url: '/api/polls/',
 		reader: {
 			type: 'json',
