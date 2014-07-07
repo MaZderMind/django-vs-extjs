@@ -4,13 +4,19 @@ Ext.define('MyApp.view.Polls', {
 	title: 'Polls',
 
 	store: 'Polls',
-	autoLoad: true,
 
 	dockedItems: [{
 		xtype: 'pagingtoolbar',
 		dock: 'bottom',
 		displayInfo: true
 	}],
+
+	listeners: {
+		beforerender: function() {
+			alert('beforerender');
+			this.store.load();
+		}
+	},
 
 	columns: [
 		{ text: 'Question',  dataIndex: 'question', flex: 1 },

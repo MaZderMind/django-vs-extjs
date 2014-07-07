@@ -27,7 +27,10 @@ Ext.define('MyApp.view.Navigation', {
 		region: 'center',
 		xtype: 'container',
 		itemId: 'contentPanel',
-		layout: 'card',
+		layout: {
+			type: 'card',
+			deferredRender: true
+		},
 
 		items: [
 			{ title: 'Welcome-Page', html: 'I\'m a Welcome-Page' }
