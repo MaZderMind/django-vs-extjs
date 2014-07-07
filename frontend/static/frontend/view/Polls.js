@@ -12,6 +12,13 @@ Ext.define('MyApp.view.Polls', {
 		displayInfo: true
 	}],
 
+	selType: 'rowmodel',
+	plugins: [
+		Ext.create('Ext.grid.plugin.RowEditing', {
+			clicksToEdit: 1
+		})
+	],
+
 	listeners: {
 		beforerender: function() {
 			alert('beforerender');
@@ -20,7 +27,13 @@ Ext.define('MyApp.view.Polls', {
 	},
 
 	columns: [
-		{ text: 'Question',  dataIndex: 'question', flex: 1 },
-		{ text: 'Publication-Date', dataIndex: 'pub_date', width: 200 }
+		{text: 'Question',  dataIndex: 'question', flex: 1, editor: {
+			xtype: 'textfield',
+			allowBlank: false
+		}},
+		{text: 'Publication-Date', dataIndex: 'pub_date', width: 200, editor: {
+			xtype: 'textfield',
+			allowBlank: false
+		}}
 	]
 });

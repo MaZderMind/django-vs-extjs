@@ -1,6 +1,7 @@
 Ext.application({
 	name: 'MyApp',
 	appFolder : '/static/frontend',
+	requires: ['MyApp.helper.CrsfTokenHelper'],
 	controllers: ['Login', 'Navigation', 'Polls'],
 
 	launch: function () {

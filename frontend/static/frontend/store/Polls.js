@@ -5,6 +5,9 @@ Ext.define('MyApp.store.Polls', {
 	remoteSort: true,
 	remoteFilter: true, // todo: test!!
 
+	// über 3g sollte man ggf. nur alle 5 sekunden syncen oder so
+	autoSync: true,
+
 	proxy: {
 		type: 'django',
 		url: '/api/polls/',
