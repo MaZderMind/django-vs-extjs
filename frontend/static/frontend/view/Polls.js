@@ -21,7 +21,6 @@ Ext.define('MyApp.view.Polls', {
 
 	listeners: {
 		beforerender: function() {
-			alert('beforerender');
 			this.store.load();
 		}
 	},
