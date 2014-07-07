@@ -11,6 +11,9 @@ Ext.define('MyApp.store.Polls', {
 	// über 3g sollte man ggf. nur alle 5 sekunden syncen oder so
 	autoSync: true,
 
+	// Defaults to 25.
+	pageSize: 50,
+
 	proxy: {
 		type: 'django',
 		url: '/api/polls/',
