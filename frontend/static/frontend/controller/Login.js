@@ -9,6 +9,8 @@ Ext.define('MyApp.controller.Login', {
 		{ 'ref': 'submitButton', selector: '#submit' }
 	],
 
+	userinfo: null,
+
 	init: function() {
 		// save the scope
 		var loginController = this;
@@ -30,6 +32,7 @@ Ext.define('MyApp.controller.Login', {
 						// raise a event on the controller
 						if(userinfo) {
 							win.hide();
+							loginController.userinfo = userinfo;
 							loginController.fireEvent('success', userinfo);
 						}
 						else {
@@ -60,6 +63,7 @@ Ext.define('MyApp.controller.Login', {
 			// analyze if a user is logged in
 			if(userinfo) {
 				// callback, if she is
+				loginController.userinfo = userinfo;
 				return callback(userinfo);
 			}
 
@@ -132,11 +136,11 @@ Ext.define('MyApp.controller.Login', {
 
 	isLoggedIn: function() {
 		// null -> false, string -> true
-		return !!this.username;
+		return !!this.userinfo;
 	},
 	
 	getUsername: function() {
-		return this.username;
+		return this.userinfo.user.username;
 	},
 
 	clearForm: function() {
