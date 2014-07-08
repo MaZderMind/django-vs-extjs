@@ -68,21 +68,22 @@ REST_FRAMEWORK = {
 	# or allow read-only access for unauthenticated users.
 	'DEFAULT_PERMISSION_CLASSES': [
 		'rest_framework.permissions.DjangoModelPermissions',
-		#'rest_framework.permissions.IsAuthenticated',
+		#'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
 	],
 
-	# configure for ExtJS REST Proxy
-	'PAGINATE_BY': 10,
 	'PAGINATE_BY_PARAM': 'limit',
-	'MAX_PAGINATE_BY': 100,
-
 	'ORDERING_PARAM': 'sort',
+
+	'PAGINATE_BY': 10,
+	'MAX_PAGINATE_BY': 100,
 
 	'DEFAULT_FILTER_BACKENDS': [
 		'rest_framework.filters.DjangoFilterBackend',
 		'rest_framework.filters.OrderingFilter',
 	],
 }
+
+LOGIN_REDIRECT_URL = '/api/'
 
 ROOT_URLCONF = 'djangotest.urls'
 
@@ -117,5 +118,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
-
-LOGIN_REDIRECT_URL = '/'
