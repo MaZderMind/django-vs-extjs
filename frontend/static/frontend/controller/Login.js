@@ -140,7 +140,7 @@ Ext.define('MyApp.controller.Login', {
 	},
 	
 	getUsername: function() {
-		return this.userinfo.user.username;
+		return this.userinfo.username;
 	},
 
 	clearForm: function() {
