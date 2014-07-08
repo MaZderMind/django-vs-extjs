@@ -41,7 +41,6 @@ INSTALLED_APPS = (
 	'rest_framework.authtoken',
 	'rest_auth',
 
-	'account',
 	'frontend',
 	'polls'
 )
@@ -84,8 +83,6 @@ REST_FRAMEWORK = {
 		'rest_framework.filters.OrderingFilter',
 	],
 }
-
-AUTH_PROFILE_MODULE = "account.UserProfile"
 
 ROOT_URLCONF = 'djangotest.urls'
 
