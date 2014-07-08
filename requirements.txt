@@ -1,7 +1,5 @@
 Django==1.6.5
-distribute==0.6.24
 django-filter==0.7
 django-registration==1.0
-django-rest-auth==0.2.2
+django-rest-auth==0.2.3
 djangorestframework==2.3.14
-wsgiref==0.1.2
