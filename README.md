@@ -58,10 +58,19 @@ Finally the Views presented by the ViewSet needs to be converted to URLs. This i
 After this you can access the browable REST-Api by accessing your local server at [http://localhost:8000/api/](http://localhost:8000/api/). In the top-right corner there is a login-button which allows you to log into the browable REST-Api and see restricted resources. The required URLs are registered in the global [urls.py-File](djangotest/urls.py#L24), too, as [http://localhost:8000/api/api/ui-auth/](http://localhost:8000/api/api/ui-auth/). `/api/ui-auth` was also chosen arbitrarily by me.
 
 ## Frontend
-The whole HTML/CSS/JS-Code lives in a Django-App called frontend.
-ensure_csrf_cookie
+The whole HTML/CSS/JS-Code lives in a Django-App called [frontend/](frontend). This app has no models but it has [a view](frontend/views.py#L7) which is connected with a url in the [urls.py-File](frontend/urls.py#L5). The View is decorated with a `@ensure_csrf_cookie` decorator, which advises Django to always send a CSRF-Cookie. Wikipedia explains good, [what CSRF is](http://en.wikipedia.org/wiki/CSRF). The CSRF-Cookie is used by ExtJS later to authoize its Ajax-Calls - more on this later.
+
+The frontend-App has a [sinlge html-template](frontend/templates/frontend/index.html) which generates the basic code sent to the Browser. For the purpose of this example we embed `ext-all-debug.js` and `ext-theme-neptune-all.css` from the CDN. In a production-app we would build us a stripped-down version of extjs, combine it with our application and server everything from our own server.
+
+Our ExtJS Application is located in [the static-folder]{frontend/static/frontend} of our frontend-App. The main file is [frontend.js](frontend/static/frontend/frontend.js) which declares our Application and links to all the bits and pieces of the ExtJS Application.
 
 ## ExtJS MVC
+The hardest thing when developing Django with ExtJS is to separate the two applications we're writing in your brain. ExtJS comes with its own Models, Views and Controllers, each in its own file and strictly named.
+
+We start by setting the App-Name and the path to load source-files from (only iduring development, later all is baked into a single file). Then we tell ExtJS to load the CSRF-Token-Helper (see below) and our Application-Controllers.
+ - The Login-Controller is responsible to check if and which user is logged into Django and to perform login or logout-tasks on the backend.
+ - The Navigation-Controller provides the Base GUI consisting of a tree on the left side and a main container on the right. Application-Views add themselfs to both panels. Selecting a View-Name in the tree switches the right container to the selected Application-View.
+ - The Polls-Controller is such an Application-View that displays an editable Grid with Polls
 
 ## Login
 ## Navigation
