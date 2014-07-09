@@ -27,21 +27,23 @@ The first thing we'll do is configuring the browsable REST-Api. For the existing
  - DELETE /api/polls/5 (remove Number 5)
 
 and some more. This feature is provided by the [Django REST framework](http://www.django-rest-framework.org/).
-To enable this functionality, add the two apps 'rest_framework' and 'rest_framework.authtoken' to the [djangotest/settings.py#L32](INSTALLED_APPS config). 'rest_framework.authtoken' provides an Token-Based authorization (your Desktop-Client-Program saves a token instead of the original username/password) which we don't need here but the 'rest_auth'-package does not work without.
+To enable this functionality, add the two apps `rest_framework` and `rest_framework.authtoken` to the [INSTALLED_APPS config](djangotest/settings.py#L32).
+
+`rest_framework.authtoken` provides an Token-Based authorization (your Desktop-Client-Program saves a token instead of the original username/password) which we don't need here but the `rest_auth`-package does not work without.
 
 Further down in the settings.py-File the [REST_FRAMEWORK configuration](djangotest/settings.py#L58) follows:
 
- - DEFAULT_MODEL_SERIALIZER_CLASS names the class that converts model-information to json. [rest_framework.serializers.HyperlinkedModelSerializer](http://www.django-rest-framework.org/tutorial/5-relationships-and-hyperlinked-apis) is the default class, that returns json based on the model definition but with hyperlinks to the clickable REST-Api
- - DEFAULT_AUTHENTICATION_CLASSES names the class that controlls how the current user is determined. [rest_framework.authentication.SessionAuthentication](http://www.django-rest-framework.org/api-guide/authentication#sessionauthentication) uses a session-cookie to identify the current user
+ - `DEFAULT_MODEL_SERIALIZER_CLASS` names the class that converts model-information to json. [rest_framework.serializers.HyperlinkedModelSerializer](http://www.django-rest-framework.org/tutorial/5-relationships-and-hyperlinked-apis) is the default class, that returns json based on the model definition but with hyperlinks to the clickable REST-Api
+ - `DEFAULT_AUTHENTICATION_CLASSES` names the class that controlls how the current user is determined. [rest_framework.authentication.SessionAuthentication](http://www.django-rest-framework.org/api-guide/authentication#sessionauthentication) uses a session-cookie to identify the current user
  - DEFAULT_PERMISSION_CLASSES names  the class that controlls which user can access which information. [rest_framework.permissions.DjangoModelPermissions](http://www.django-rest-framework.org/api-guide/permissions#djangomodelpermissions) uses the permissions that can be controlled in the django admin-gui. Depending on your requirements there are [other defaults](http://www.django-rest-framework.org/api-guide/permissions) you should check out.
    ![django permission GUI](http://i.stack.imgur.com/icrtr.png)
- - PAGINATE_BY_PARAM configures the name of the parameter, that the django REST-Api expects from ExtJS to specify the number of results that should be returned. "limit" is what ExtJS assumes by default.
- - ORDERING_PARAM does the same for sorting. ExtJS defaults to "sort"
- - PAGINATE_BY is the default number of items to display per page. ExtJS has its own setting, so this setting does not really matter much
- - MAX_PAGINATE_BY limits the number of items that can be returned per page.
- - DEFAULT_FILTER_BACKENDS enables sorting and filtering by default. The classes named in this array are ties between the datasource an the REST-Api-Output and that can modify the queries sent to the database. The order of items in this array matters - first filter, then sort. This would be the place to add other filter backends, see "Filtering" below.
+ - `PAGINATE_BY_PARAM` configures the name of the parameter, that the django REST-Api expects from ExtJS to specify the number of results that should be returned. `limit` is what ExtJS assumes by default.
+ - `ORDERING_PARAM` does the same for sorting. ExtJS defaults to `sort`
+ - `PAGINATE_BY` is the default number of items to display per page. ExtJS has its own setting, so this setting does not really matter much
+ - `MAX_PAGINATE_BY` limits the number of items that can be returned per page.
+ - `DEFAULT_FILTER_BACKENDS` enables sorting and filtering by default. The classes named in this array are ties between the datasource an the REST-Api-Output and that can modify the queries sent to the database. The order of items in this array matters - first filter, then sort. This would be the place to add other filter backends, see "Filtering" below.
 
-And finally a global setting - LOGIN_REDIRECT_URL - sets the url where a non-ajax user gets redirected after the login. This only matters when a user loggs in to the browsable api, because normal users will always use the Ajax-Gui. Setting this value to '/api/' is just a cosmetic thing.
+And finally a global setting - `LOGIN_REDIRECT_URL` - sets the url where a non-ajax user gets redirected after the login. This only matters when a user loggs in to the browsable api, because normal users will always use the Ajax-Gui. Setting this value to `/api/` is just a cosmetic thing.
 
 ## ViewSet, Serializer, Routers
 In Django, each URL is connected to a View which determines the response sent when a request for that URL is received. In [Part 3 of the Tutorial](https://docs.djangoproject.com/en/1.6/intro/tutorial03/) you would create some views and connect them with Urls.
@@ -53,7 +55,25 @@ The ViewSet is connected to a serializer class which specifies, which fields sho
 Finally the Views presented by the ViewSet needs to be converted to URLs. This is done by the Router. The REST-Api works best with a single REST-Router, so we start in the [global urls.py-File](djangotest/urls.py#L9) and call into the register-method of the Polls-app in [Line 13](djangotest/urls.py#L13). The register-Method is defined in the [rest.py File](polls/rest.py#L16) of the Polls-App and just registers the ViewSet with the Router. The Router generates the all required urls and is embedded in the global url-scheme below `/api` in [the global urls.py-File](djangotest/urls.py#L30). `/api` was chosen arbitrarily by me.
 
 ## REST-Api-Urls
-After this you can access the browable REST-Api by accessing your local server at http://localhost:8000/api/. In the top-right corner there is a login-button which allows you to log into the browable REST-Api and see restricted resources. The required URLs are registered in the global [urls.py-File](djangotest/urls.py#L24), too, as http://localhost:8000/api/api/ui-auth/. `/api/ui-auth` was also chosen arbitrarily by me.
+After this you can access the browable REST-Api by accessing your local server at [http://localhost:8000/api/](http://localhost:8000/api/). In the top-right corner there is a login-button which allows you to log into the browable REST-Api and see restricted resources. The required URLs are registered in the global [urls.py-File](djangotest/urls.py#L24), too, as [http://localhost:8000/api/api/ui-auth/](http://localhost:8000/api/api/ui-auth/). `/api/ui-auth` was also chosen arbitrarily by me.
+
+## Frontend
+The whole HTML/CSS/JS-Code lives in a Django-App called frontend.
+ensure_csrf_cookie
+
+## ExtJS MVC
+
+## Login
+## Navigation
+## Demo-View: Polls
+## Store
+
+## CrsfTokenHelper
+## DjangoProxy
+
+
+
+
 
 ## Filtering
 
