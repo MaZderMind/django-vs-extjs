@@ -43,6 +43,18 @@ Further down in the settings.py-File the [REST_FRAMEWORK configuration](djangote
 
 And finally a global setting - LOGIN_REDIRECT_URL - sets the url where a non-ajax user gets redirected after the login. This only matters when a user loggs in to the browsable api, because normal users will always use the Ajax-Gui. Setting this value to '/api/' is just a cosmetic thing.
 
+## ViewSet, Serializer, Routers
+In Django, each URL is connected to a View which determines the response sent when a request for that URL is received. In [Part 3 of the Tutorial](https://docs.djangoproject.com/en/1.6/intro/tutorial03/) you would create some views and connect them with Urls.
+
+In the example above we see a set of different URLs that play together to form the REST-Api: /api/polls and /api/polls/5 each with a set of different HTTP Verbs. The Django REST-Api offers so-called ViewSets, which represent a Set of those Views. A ViewSet is specified around a set of rows queried from a Django-Model in [rest.py](polls/rest.py#L12) - a file I created to hold all the rest-related code. By extending your ViewSet-Class you can controll, which rows from your Database will be accessable on the REST-Api (ie only the completed tasks or only the published projects - whatever you need). You can do this by specifying filters when setting the queryset-Parameter.
+
+The ViewSet is connected to a serializer class which specifies, which fields should be made visible on the REST-Api and how the rows will be represented. In our test-setup we just list the fields that should be visible on the api, but much more can be done in the Serializer, for example [embedding 1-to-n related rows](http://www.django-rest-framework.org/api-guide/relations).
+
+Finally the Views presented by the ViewSet needs to be converted to URLs. This is done by the Router. The REST-Api works best with a single REST-Router, so we start in the [global urls.py-File](djangotest/urls.py#L9) and call into the register-method of the Polls-app in [Line 13](djangotest/urls.py#L13). The register-Method is defined in the [rest.py File](polls/rest.py#L16) of the Polls-App and just registers the ViewSet with the Router. The Router generates the all required urls and is embedded in the global url-scheme below `/api` in [the global urls.py-File](djangotest/urls.py#L30). `/api` was chosen arbitrarily by me.
+
+## REST-Api-Urls
+After this you can access the browable REST-Api by accessing your local server at http://localhost:8000/api/. In the top-right corner there is a login-button which allows you to log into the browable REST-Api and see restricted resources. The required URLs are registered in the global [urls.py-File](djangotest/urls.py#L24), too, as http://localhost:8000/api/api/ui-auth/. `/api/ui-auth` was also chosen arbitrarily by me.
+
 ## Filtering
 
 ## Running with Python 3.2
