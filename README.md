@@ -95,11 +95,21 @@ The Controller keeps track of all available content views by adding them to the 
 As an example I created the [Polls-Controller](frontend/static/frontend/controller/Polls.js) and [-View](frontend/static/frontend/view/Polls.js). The controller only adds the View to the Navigation-Controller as explained above. The View only consists of a single [GridPanel](http://docs-origin.sencha.com/extjs/5.0.0/apidocs/#!/api/Ext.grid.Panel) which is configured with paging, sorting and editing. It is bound to the [Polls-Store](frontend/static/frontend/store/Polls.js) which configures, how data is loaded from and saved to the Django-Backend.
 
 ## CrsfTokenHelper
+The Django REST-Api reqires, that all None-GET-Requests carry an [CSRF-Token](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29_Prevention_Cheat_Sheet#Double_Submit_Cookies). The Token is sent to the Browser as a Cookie and must be copied to the POST-Parameters or the Request-Headers. Requests that do not fulfil this reqirement are rejected.
+
+The [CrsfTokenHelper-Class](frontend/static/frontend/helper/CrsfTokenHelper.js) is loaded from `frontend.js`. It is declared as singleton and thus immedeatly instanciated by ExtJS. In its constructor it adds an `beforerequest`-Event-Handler to the ExtJS Ajax Routines, which statisfy the above mentioned need by copying the Cookie into a custem HTTP-Reqest-Header `X-CSRFToken`. Thus no other parts of the Application need to worry about CSRF Prevention Issues.
+
 ## DjangoProxy
+Django has a very specific way of transporting the Sort-Direction over the API:
 
+ - [http://localhost:8000/api/polls/?sort=question](http://localhost:8000/api/polls/?sort=question) sorts by question Ascending
+ - [http://localhost:8000/api/polls/?sort=-question](http://localhost:8000/api/polls/?sort=-question) sorts by question Descending
 
+The Sort-Direction is specified by the minus-Sign before the fieldname. This is not directly supported by ExtJS, so we need custom code to implement serializing the ExtJS Sort-Information into the GET-Parameter Value.
 
+Additionally - when updating Rows - ExtJS sends partitial updates by default (only the changed fields). The REST-Apis `PUT`-Method-Handler expects complete Records and fails if fields are missing. We correct this by telling ExtJS to send a `PATCH`-Request instead of `POST` for updates. Djangos The REST-Api handles `PATCH` like `POST` but without the check for completion.
 
+Both code parts can be found in the [DjangoProxy](frontend/static/frontend/helper/DjangoProxy.js)-Class, which is directly derived from [Ext.data.proxy.Rest](http://docs.sencha.com/extjs/5.0.0/apidocs/#!/api/Ext.data.proxy.Rest), the REST-Adapter supplied by ExtJS.
 
 ## Filtering
 
