@@ -60,14 +60,14 @@ After this you can access the browable REST-Api by accessing your local server a
 ## REST-Auth-Api
 The Django-Backend has an idea of user, password, login and session. It can manage those for us. The question is: how can an ExtJS-App ask the Django-Side if a given username/password combination is valid and retrieve an auth-token for it, how can it check if a given auth-token is still valid and make the Django-Backend forget the token when the user opts to log out.
 
-We employ the [django-rest-auth-Package](https://github.com/Tivix/django-rest-auth/) for this task. It provides a [convenient set of URLs](https://github.com/Tivix/django-rest-auth/#api-endpoints-with-authentication) to do these kind of tasks. It can simply be added to the global url routing in [urls.py](djangotest/urls.py#L27) as /api/auth/ (test ie. [http://localhost:8000/api/auth/user/](http://localhost:8000/api/auth/user/).
+We employ the [django-rest-auth-Package](https://github.com/Tivix/django-rest-auth/) for this task. It provides a [convenient set of URLs](https://github.com/Tivix/django-rest-auth/#api-endpoints-with-authentication) to do these kind of tasks. It can simply be added to the global url routing in [urls.py](djangotest/urls.py#L27) as `/api/auth/` (test ie. [http://localhost:8000/api/auth/user/](http://localhost:8000/api/auth/user/).
 
 ## Frontend
 The whole HTML/CSS/JS-Code lives in a Django-App called [frontend/](frontend). This app has no models but it has [a view](frontend/views.py#L7) which is connected with a url in the [urls.py-File](frontend/urls.py#L5). The View is decorated with a `@ensure_csrf_cookie` decorator, which advises Django to always send a CSRF-Cookie. Wikipedia explains good, [what CSRF is](http://en.wikipedia.org/wiki/CSRF). The CSRF-Cookie is used by ExtJS later to authoize its Ajax-Calls - more on this later.
 
 The frontend-App has a [sinlge html-template](frontend/templates/frontend/index.html) which generates the basic code sent to the Browser. For the purpose of this example we embed `ext-all-debug.js` and `ext-theme-neptune-all.css` from the CDN. In a production-app we would build us a stripped-down version of extjs, combine it with our application and server everything from our own server.
 
-Our ExtJS Application is located in [the static-folder]{frontend/static/frontend} of our frontend-App. The main file is [frontend.js](frontend/static/frontend/frontend.js) which declares our Application and links to all the bits and pieces of the ExtJS Application.
+Our ExtJS Application is located in [the static-folder](frontend/static/frontend) of our frontend-App. The main file is [frontend.js](frontend/static/frontend/frontend.js) which declares our Application and links to all the bits and pieces of the ExtJS Application.
 
 ## ExtJS MVC
 The hardest thing when developing Django with ExtJS is to separate the two applications we're writing in your brain. ExtJS comes with its own Models, Views and Controllers, each in its own file and strictly named.
@@ -77,10 +77,22 @@ We start by setting the App-Name and the path to load source-files from (only id
  - The Navigation-Controller provides the Base GUI consisting of a tree on the left side and a main container on the right. Application-Views add themselfs to both panels. Selecting a View-Name in the tree switches the right container to the selected Application-View.
  - The Polls-Controller is such an Application-View that displays an editable Grid with Polls
 
+
+
 ## Login
+The [Login-Controller](frontend/static/frontend/controller/Login.js) handles login and logout procedure with the Django-backend, displays and handles the login-window. It is called very early from the [main js-file](frontend/static/frontend/frontend.js), which calls [ensureLoggedIn](frontend/static/frontend/controller/Login.js#L89) with a callback. The callback will be called when the Login-Controller made sure that a user is logged in.
+
+The Login-Controller first calls `/api/auth/user/`, one of the apis provided by the [django-rest-auth-Package](https://github.com/Tivix/django-rest-auth/), to determine if the user accessing the application has a valid authorization token known by Django. If she has, the callback is called immedately and the applications boots up.
+
+If no valid token was detected, the [login-view](frontend/static/frontend/view/Login.js) is shown. When it gets submitted by the user, the Login-Controller passes the entered information to the `/api/auth/login/` API, which accepts or denys the login credentials. When the user is granted access, the Login-Controller repeats its call to `/api/auth/user/` to get the updated user information and calls back as if the first call to `/api/auth/user/` had succeeded.
+
 ## Navigation
+The [Navigation-Controller](frontend/static/frontend/view/Navigation.js) provides the main application view (in words: tree left, content right). The content-container to the right is configured to use [a card-layout](http://docs-origin.sencha.com/extjs/5.0.0/apidocs/#!/api/Ext.layout.container.Card), which displays one content view at a time (and hides all the other).
+
+The Controller keeps track of all available content views by adding them to the navigation-tree and the content-view. The Content-Controllers adds their views to the Navigation-Controller which adds an item to the Navigation-Tree and the View to the content-container. When an item is selected in the navigation tree, the corresponding view in the content panel is shown.
+
 ## Demo-View: Polls
-## Store
+As an example I created the [Polls-Controller](frontend/static/frontend/controller/Polls.js) and [-View](frontend/static/frontend/view/Polls.js). The controller only adds the View to the Navigation-Controller as explained above. The View only consists of a single [GridPanel](http://docs-origin.sencha.com/extjs/5.0.0/apidocs/#!/api/Ext.grid.Panel) which is configured with paging, sorting and editing. It is bound to the [Polls-Store](frontend/static/frontend/store/Polls.js) which configures, how data is loaded from and saved to the Django-Backend.
 
 ## CrsfTokenHelper
 ## DjangoProxy
