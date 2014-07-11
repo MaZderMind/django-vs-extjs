@@ -20,7 +20,7 @@ Ext.define('MyApp.view.Navigation', {
 
 		title: 'Navigation',
 		tbar: [
-			{ tpl: 'Logged in as {user.username}', xtype: 'label', itemId: 'loginMessage'},
+			{ tpl: 'Logged in as {username}', xtype: 'label', itemId: 'loginMessage'},
 			'->',
 			{ text: 'Logout', itemId: 'logoutButton' }
 		]
