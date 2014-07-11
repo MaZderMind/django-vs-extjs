@@ -112,7 +112,7 @@ Additionally - when updating Rows - ExtJS sends partitial updates by default (on
 Both code parts can be found in the [DjangoProxy](frontend/static/frontend/helper/DjangoProxy.js)-Class, which is directly derived from [Ext.data.proxy.Rest](http://docs.sencha.com/extjs/5.0.0/apidocs/#!/api/Ext.data.proxy.Rest), the REST-Adapter supplied by ExtJS.
 
 ## Filtering
+is currently a little problematic while it should work as easy as sorting.
 
 ## Running with Python 3.2
-
-## A word on Production systems
+While under Python 3.3 everything works out of the box, the rest-auth-Plugin has problems wit python 3.2. The reason is this is, that it still contains Python2 conform `u'string'` Unicode-Literals which were dropped in Python3 and [readded in Python 3.3](https://docs.python.org/3/whatsnew/3.3.html) for backwards compatibility. I replaced a bunch of `u'string'` occurencies with `'string'` to get it running on a Debian-Stable server, but instead we should just send them a [Pull Request](https://github.com/Tivix/django-rest-auth/pulls).
