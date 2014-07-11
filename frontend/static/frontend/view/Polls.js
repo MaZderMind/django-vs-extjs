@@ -22,6 +22,7 @@ Ext.define('MyApp.view.Polls', {
 
 	listeners: {
 		beforerender: function() {
+			// load store-content when the user first visits the view
 			this.store.load();
 		}
 	},

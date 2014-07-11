@@ -21,10 +21,11 @@ Ext.define('MyApp.controller.Login', {
 		// create an instance of the view
 		var win = loginController.loginWindow = loginController.getView('Login').create();
 
-		// register for the login-click
 		this.control({
+			// register for the login-click
 			'#submit': {
 				click: function() {
+					// retrieve username & password from view
 					var
 						username = this.getUserField().getValue(),
 						password = this.getPassField().getValue();
@@ -34,25 +35,37 @@ Ext.define('MyApp.controller.Login', {
 
 					// process the login with the backend
 					loginController.performLogin(username, password, function(success) {
+						// the user was successfully authorized
 						if(success) {
-							// the user was successfully authorized
-							// no request additional information on the user (name and such)
+							// now request additional information on the user (name and such)
 							loginController.fetchLoginStatus(function(userinfo) {
-								// raise a event on the controller
+								// test if the server responded with data as expected
 								if(userinfo) {
+									// hide the login-window
 									win.hide();
+
+									// store received information locally
 									loginController.userinfo = userinfo;
+
+									// raise a event on the controller when finished
 									loginController.fireEvent('success', userinfo);
 								}
+
+								// we did not receive valid data from the server
+								// this sould not fail, but if it does, just handle it like a failed login
 								else {
-									// this sould not fail, but if it does, just handle it like a failed login
+									// disable the login on the form
 									win.unmask();
+
+									// set error-message on password-field
 									loginController.clearPasswordAndFocus().setPasswordError('Invalid Username or Password!');
 								}
 							})
 						}
+
+						// authorization was not successful
+						// unmask the form, show an error message and restart login process
 						else {
-							// nope, unmask the form, show an error message and restart login process
 							win.unmask();
 							loginController.clearPasswordAndFocus().showError('Invalid Username or Password!');
 						}
@@ -63,6 +76,7 @@ Ext.define('MyApp.controller.Login', {
 
 		// register keyboard handler
 		this.nav = new Ext.KeyNav(win.getEl(), {
+			// enter key -> login-button click
 			enter: function() {
 				loginController.getSubmitButton().fireEvent('click')
 			}
@@ -91,7 +105,7 @@ Ext.define('MyApp.controller.Login', {
 			// login-testing and re-trying is handled by the handler set in the init-method
 			// it raises an event on the controller once it is finished
 			// we listen on this event and relay it to our callback - but only once
-			//  -> the callback can't be called twice
+			//  -> the callback shouldn't be called multiple times
 			loginController.on('success', callback, {single: true});
 
 			// initiate login procedure by showing the login window
@@ -106,6 +120,7 @@ Ext.define('MyApp.controller.Login', {
 		Ext.Ajax.request({
 			url: '/api/auth/user/',
 			success: function(response) {
+				// decode json-response
 				var userinfo = Ext.util.JSON.decode(response.responseText);
 
 				// callback with the decoded response
@@ -120,8 +135,11 @@ Ext.define('MyApp.controller.Login', {
 		});
 	},
 
+	// submit username & password to the backend
 	performLogin: function(username, password, callback) {
 		console.info('trying to log into backend with username=', username, 'password=', password.length, 'Chars');
+
+		// send login data via ajax to the server and callback with result
 		Ext.Ajax.request({
 			url: '/api/auth/login/',
 			method: 'POST',
@@ -138,8 +156,13 @@ Ext.define('MyApp.controller.Login', {
 		});
 	},
 
+	// ask the backend to throw away our session which makes us logged out
 	performLogout: function(callback) {
 		console.info('trying to log out from backend');
+
+		// ensure userinfo is unset
+		this.userinfo = null;
+
 		Ext.Ajax.request({
 			url: '/api/auth/logout/',
 			method: 'GET',
@@ -152,15 +175,18 @@ Ext.define('MyApp.controller.Login', {
 		});
 	},
 
+	// shorthand to test iff userinfo is available
 	isLoggedIn: function() {
 		// null -> false, string -> true
 		return !!this.userinfo;
 	},
-	
+
+	// shorthand to get the current username
 	getUsername: function() {
-		return this.userinfo.username;
+		return this.isLoggedIn() ? this.userinfo.username : null;
 	},
 
+	// clears all form elements in the view
 	clearForm: function() {
 		this.loginWindow.unmask();
 		this.getPassField().setValue('').unsetActiveError();
@@ -169,11 +195,13 @@ Ext.define('MyApp.controller.Login', {
 		return this;
 	},
 
+	// clears the password-field in the view and sets the typing-focus to it
 	clearPasswordAndFocus: function() {
 		this.getPassField().setValue('').focus();
 		return this;
 	},
 
+	// set an error-message on the password-fieldy
 	setPasswordError: function(msg) {
 		this.getPassField().setActiveErrors([msg]);
 		return this;
