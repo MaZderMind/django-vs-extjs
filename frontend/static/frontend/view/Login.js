@@ -14,18 +14,6 @@ Ext.define('MyApp.view.Login', {
 
 	defaultFocus: 'user',
 
-	listeners: {
-		afterRender: function() {
-			// save the scope
-			var submitButton = this.down('#submit');
-
-			// register keyboard handler
-			this.nav = new Ext.KeyNav(this.getEl(), {
-				enter: Ext.bind(submitButton.handler, submitButton)
-			});
-		}
-	},
-
 	defaultType: 'textfield',
 	items: [{
 		itemId: 'user',
@@ -40,16 +28,6 @@ Ext.define('MyApp.view.Login', {
 
 	buttons: [{
 		text: 'Login',
-		itemId: 'submit',
-		handler: function() {
-			// get a reference to the window
-			var win = this.up('window');
-
-			// trigger a login-click on the window with the entered values
-			win.fireEvent('login-click',
-				win.down('#user').getValue(),
-				win.down('#pass').getValue()
-			);
-		}
+		itemId: 'submit'
 	}]
 });

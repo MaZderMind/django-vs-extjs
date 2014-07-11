@@ -3,51 +3,69 @@ Ext.define('MyApp.controller.Login', {
 	mixins: ['Ext.mixin.Observable'],
 	views: ['Login'],
 
+	// pointers into the view
 	refs: [
 		{ 'ref': 'userField', selector: '#user' },
 		{ 'ref': 'passField', selector: '#pass' },
 		{ 'ref': 'submitButton', selector: '#submit' }
 	],
 
+	// stored user information as received from the server
 	userinfo: null,
 
+	// controller initialisation
 	init: function() {
 		// save the scope
 		var loginController = this;
 
-		// create a html representation of the window
+		// create an instance of the view
 		var win = loginController.loginWindow = loginController.getView('Login').create();
 
 		// register for the login-click
-		win.on('login-click', function(username, password) {
-			// mask the form out
-			win.mask('Verifying…');
+		this.control({
+			'#submit': {
+				click: function() {
+					var
+						username = this.getUserField().getValue(),
+						password = this.getPassField().getValue();
 
-			// process the login with the backend
-			loginController.performLogin(username, password, function(success) {
-				if(success) {
-					// the user was successfully authorized
-					// no request additional information on the user (name and such)
-					loginController.fetchLoginStatus(function(userinfo) {
-						// raise a event on the controller
-						if(userinfo) {
-							win.hide();
-							loginController.userinfo = userinfo;
-							loginController.fireEvent('success', userinfo);
+					// mask the form out
+					win.mask('Verifying…');
+
+					// process the login with the backend
+					loginController.performLogin(username, password, function(success) {
+						if(success) {
+							// the user was successfully authorized
+							// no request additional information on the user (name and such)
+							loginController.fetchLoginStatus(function(userinfo) {
+								// raise a event on the controller
+								if(userinfo) {
+									win.hide();
+									loginController.userinfo = userinfo;
+									loginController.fireEvent('success', userinfo);
+								}
+								else {
+									// this sould not fail, but if it does, just handle it like a failed login
+									win.unmask();
+									loginController.clearPasswordAndFocus().setPasswordError('Invalid Username or Password!');
+								}
+							})
 						}
 						else {
-							// this sould not fail, but if it does, just handle it like a failed login
+							// nope, unmask the form, show an error message and restart login process
 							win.unmask();
-							loginController.clearPasswordAndFocus().setPasswordError('Invalid Username or Password!');
+							loginController.clearPasswordAndFocus().showError('Invalid Username or Password!');
 						}
 					})
 				}
-				else {
-					// nope, unmask the form, show an error message and restart login process
-					win.unmask();
-					loginController.clearPasswordAndFocus().showError('Invalid Username or Password!');
-				}
-			})
+			}
+		});
+
+		// register keyboard handler
+		this.nav = new Ext.KeyNav(win.getEl(), {
+			enter: function() {
+				loginController.getSubmitButton().fireEvent('click')
+			}
 		});
 	},
 
