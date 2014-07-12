@@ -34,14 +34,26 @@ Ext.define('MyApp.view.Polls', {
 
 	// configure columns
 	columns: [
-		{text: 'Question',  dataIndex: 'question', flex: 1, filter: 'string', editor: {
-			xtype: 'textfield',
-			allowBlank: false
-		}},
-		{text: 'Publication-Date', dataIndex: 'pub_date', width: 200, editor: {
-			// todo: date parsing - im store? im model?
-			xtype: 'textfield',
-			allowBlank: false
-		}}
+		{
+			text: 'Question',
+			dataIndex: 'question',
+			flex: 1,
+			filter: 'string',
+			editor: {
+				xtype: 'textfield',
+				allowBlank: false
+			}
+		}, {
+			text: 'Publication-Date',
+			dataIndex: 'pub_date',
+			xtype: 'datecolumn',
+			format:'l, d. F Y',
+			width: 200,
+			editor: {
+				xtype: 'datefield',
+				format: 'd.m.Y',
+				allowBlank: false
+			}
+		}
 	]
 });

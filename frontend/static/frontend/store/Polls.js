@@ -24,5 +24,8 @@ Ext.define('MyApp.store.Polls', {
 		}
 	},
 
-	fields: ['question', 'pub_date']
+	fields: [
+		'question',
+		{name: 'pub_date', type: 'date', dateFormat: 'c'}
+	]
 });
