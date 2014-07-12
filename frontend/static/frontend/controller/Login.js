@@ -48,7 +48,7 @@ Ext.define('MyApp.controller.Login', {
 									loginController.userinfo = userinfo;
 
 									// raise a event on the controller when finished
-									loginController.fireEvent('success', userinfo);
+									loginController.fireEvent('login', userinfo);
 								}
 
 								// we did not receive valid data from the server
@@ -96,6 +96,7 @@ Ext.define('MyApp.controller.Login', {
 			if(userinfo) {
 				// callback, if she is
 				loginController.userinfo = userinfo;
+				loginController.fireEvent('login', userinfo);
 				return callback(userinfo);
 			}
 
@@ -106,7 +107,7 @@ Ext.define('MyApp.controller.Login', {
 			// it raises an event on the controller once it is finished
 			// we listen on this event and relay it to our callback - but only once
 			//  -> the callback shouldn't be called multiple times
-			loginController.on('success', callback, {single: true});
+			loginController.on('login', callback, {single: true});
 
 			// initiate login procedure by showing the login window
 			loginController.loginWindow.show();
@@ -123,9 +124,23 @@ Ext.define('MyApp.controller.Login', {
 				// decode json-response
 				var userinfo = Ext.util.JSON.decode(response.responseText);
 
-				// callback with the decoded response
-				console.log('received userinfo:', userinfo);
-				callback(userinfo);
+				// request user permission list
+				Ext.Ajax.request({
+					url: '/api/auth/permissions/',
+					success: function(response) {
+						// decode json-response
+						userinfo.permissions = Ext.util.JSON.decode(response.responseText);
+
+						// callback with the decoded response
+						console.log('received userinfo:', userinfo);
+						callback(userinfo);
+					},
+					failure: function(response) {
+						// callback without info
+						console.log('received no permission list - nobody logged in');
+						callback();
+					}
+				});
 			},
 			failure: function(response) {
 				// callback without info
@@ -182,8 +197,27 @@ Ext.define('MyApp.controller.Login', {
 	},
 
 	// shorthand to get the current username
+	getUserinfo: function() {
+		return this.userinfo;
+	},
+
+	// shorthand to get the current username
 	getUsername: function() {
-		return this.isLoggedIn() ? this.userinfo.username : null;
+		return this.isLoggedIn() ? this.getUserinfo().username : null;
+	},
+
+	// shorthand to get the current username
+	getPermissions: function() {
+		return this.isLoggedIn() ? this.userinfo.permissions.user_permissions : [];
+	},
+
+	// shorthand to get the current username
+	isSuperuser: function() {
+		return this.isLoggedIn() ? this.userinfo.permissions.is_superuser : [];
+	},
+
+	hasPermission: function(permission) {
+		return this.isLoggedIn() && (this.isSuperuser() || this.getPermissions().indexOf(permission) !== -1)
 	},
 
 	// clears all form elements in the view

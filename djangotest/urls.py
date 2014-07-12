@@ -26,6 +26,9 @@ urlpatterns = patterns('',
 	# login for rest-api
 	url(r'^api/auth/', include('rest_auth.urls')),
 
+	# login for rest-api
+	url(r'^api/', include('frontend.apiurls')),
+
 	# base for the browsable- the rest-api
 	url(r'^api/', include(restrouter.urls)),
 )

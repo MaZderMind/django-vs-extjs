@@ -9,7 +9,10 @@ Ext.define('MyApp.controller.Polls', {
 
 	init: function() {
 		// save the scope
-		var pollsController = this;
+		var
+			pollsController = this,
+			loginController = MyApp.getApplication().getController('Login'),
+			navigationController = MyApp.getApplication().getController('Navigation');
 
 		this.view = this.getView('Polls').create();
 
@@ -27,9 +30,11 @@ Ext.define('MyApp.controller.Polls', {
 			}
 		});
 
-		// register polls-view in the navigation
-		MyApp.getApplication().getController('Navigation')
-			.registerNavigationItem('polls', 'poll-management', this.view);
+		loginController.on('login', function() {
+			// register polls-view in the navigation
+			if(loginController.hasPermission('add_poll'))
+				navigationController.registerNavigationItem('polls', 'poll-management', pollsController.view);
+		});
 	},
 
 	onAddRow: function() {
