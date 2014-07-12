@@ -3,6 +3,7 @@ Ext.define('MyApp.helper.DjangoProxy', {
 	requires: ['MyApp.helper.DjangoReader'],
 	alias: 'proxy.django',
 
+	// configure to use the django reader
 	reader: 'django',
 
 	// ExtJS sends partitial updates by default (only the changed fields)
@@ -15,5 +16,31 @@ Ext.define('MyApp.helper.DjangoProxy', {
 	encodeSorters: function(sorters) {
 		var sorter = sorters[0];
 		return (sorter.getDirection() == 'DESC' ? '-' : '') + sorter.getProperty();
+	},
+
+	getParams: function(operation) {
+		var
+			params = this.callParent(arguments),
+			filters = operation.getFilters();
+
+		if (!operation.isReadOperation) {
+			return params;
+		}
+
+		delete params[this.getFilterParam()];
+
+		Ext.each(filters, function(filter) {
+			var p = filter.getProperty(), v = filter.getValue();
+
+			switch(filter.getOperator()) {
+				case 'like':
+					params[p+'__icontains'] = v;
+					break;
+				default:
+					console.error('missing filter operation', filter.getOperator(), 'needs to be implemented');
+			}
+		});
+
+		return params;
 	}
 });

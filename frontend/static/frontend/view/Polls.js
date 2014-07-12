@@ -30,7 +30,10 @@ Ext.define('MyApp.view.Polls', {
 
 			// on double-click
 			clicksToEdit: 2
-		})
+		}),
+
+		// enable filterin in the column headers
+		'gridfilters'
 	],
 
 	listeners: {
@@ -50,6 +53,9 @@ Ext.define('MyApp.view.Polls', {
 			editor: {
 				xtype: 'textfield',
 				allowBlank: false
+			},
+			filter: {
+				type: 'string'
 			}
 		}, {
 			text: 'Publication-Date',
