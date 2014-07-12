@@ -1,6 +1,9 @@
 Ext.define('MyApp.helper.DjangoProxy', {
 	extend: 'Ext.data.proxy.Rest',
+	requires: ['MyApp.helper.DjangoReader'],
 	alias: 'proxy.django',
+
+	reader: 'django',
 
 	// ExtJS sends partitial updates by default (only the changed fields)
 	// The REST-Apis PUT-MEthod-Handler expects complete Records and fails if fields are missing

@@ -14,12 +14,20 @@ Ext.define('MyApp.view.Polls', {
 		displayInfo: true
 	}],
 
+	// top toolbar
+	tbar: [
+		{text: 'delete', itemId: 'tbDelete'},
+		{text: 'add', itemId: 'tbAdd'}
+	],
+
 	// select complete rows
 	selType: 'rowmodel',
 
 	plugins: [
 		// enable row editor
 		Ext.create('Ext.grid.plugin.RowEditing', {
+			itemId: 'rowEditor',
+
 			// on double-click
 			clicksToEdit: 2
 		})

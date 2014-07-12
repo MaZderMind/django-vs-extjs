@@ -1,6 +1,7 @@
 Ext.define('MyApp.store.Polls', {
 	requires: ['MyApp.helper.DjangoProxy'],
 	extend: 'Ext.data.Store',
+	model: 'MyApp.model.Poll',
 
 	remoteSort: true,
 
@@ -16,16 +17,6 @@ Ext.define('MyApp.store.Polls', {
 
 	proxy: {
 		type: 'django',
-		url: '/api/polls/',
-		reader: {
-			type: 'json',
-			rootProperty: 'results',
-			totalProperty: 'count'
-		}
-	},
-
-	fields: [
-		'question',
-		{name: 'pub_date', type: 'date', dateFormat: 'c'}
-	]
+		url: '/api/polls/'
+	}
 });

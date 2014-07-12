@@ -9,7 +9,10 @@ Ext.application({
 	controllers: ['Login', 'Navigation', 'Polls'],
 
 	// other required components
-	requires: ['MyApp.helper.CrsfTokenHelper'],
+	requires: [
+		'MyApp.helper.CrsfTokenHelper',
+		'MyApp.helper.PhantomStoreInserter'
+	],
 
 	// application launch method
 	launch: function () {
