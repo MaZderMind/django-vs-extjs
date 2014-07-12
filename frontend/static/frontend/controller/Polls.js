@@ -34,7 +34,7 @@ Ext.define('MyApp.controller.Polls', {
 			// register polls-view in the navigation
 			if(loginController.hasPermission('add_poll'))
 				navigationController.registerNavigationItem('polls', 'poll-management', pollsController.view);
-		});
+		}, {single: true});
 	},
 
 	onAddRow: function() {
