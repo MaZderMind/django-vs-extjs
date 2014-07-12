@@ -14,8 +14,6 @@ Ext.define('MyApp.controller.Polls', {
 			loginController = MyApp.getApplication().getController('Login'),
 			navigationController = MyApp.getApplication().getController('Navigation');
 
-		this.view = this.getView('Polls').create();
-
 		this.control({
 			'#tbDelete': {
 				click: this.onRemoveRow
@@ -31,6 +29,8 @@ Ext.define('MyApp.controller.Polls', {
 		});
 
 		loginController.on('login', function() {
+			pollsController.view = pollsController.getView('Polls').create();
+
 			// register polls-view in the navigation
 			if(loginController.hasPermission('add_poll'))
 				navigationController.registerNavigationItem('polls', 'poll-management', pollsController.view);
