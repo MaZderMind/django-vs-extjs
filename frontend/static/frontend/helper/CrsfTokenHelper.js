@@ -5,9 +5,13 @@ Ext.define('MyApp.helper.CrsfTokenHelper', {
 		Ext.Ajax.on('beforerequest', function (conn, options) {
 			if (!(/^http:.*/.test(options.url) || /^https:.*/.test(options.url))) {
 				if (typeof(options.headers) == "undefined") {
-					options.headers = {'X-CSRFToken': Ext.util.Cookies.get('csrftoken')};
+					options.headers = {
+						'Accept': 'application/json',
+						'X-CSRFToken': Ext.util.Cookies.get('csrftoken')
+					};
 				} else {
-					options.headers.extend({'X-CSRFToken': Ext.util.Cookies.get('csrftoken')});
+					options.headers['Application'] = 'application/json';
+					options.headers['X-CSRFToken'] = Ext.util.Cookies.get('csrftoken');
 				}
 			}
 		}, this);

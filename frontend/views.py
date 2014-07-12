@@ -14,4 +14,4 @@ def permissions(request):
 			'is_superuser': request.user.is_superuser,
 			'user_permissions': list(map(lambda x:str(x.codename), request.user.user_permissions.all()))
 		}
-	), 'text/json')
+	), 'application/json')
