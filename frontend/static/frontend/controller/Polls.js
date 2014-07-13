@@ -28,13 +28,14 @@ Ext.define('MyApp.controller.Polls', {
 			}
 		});
 
-		loginController.on('login', function() {
+		loginController.on('ready', function() {
 			pollsController.view = pollsController.getView('Polls').create();
 
 			// register polls-view in the navigation
 			if(loginController.hasPermission('add_poll'))
 				navigationController.registerNavigationItem('polls', 'poll-management', pollsController.view);
 		}, {single: true});
+
 	},
 
 	onAddRow: function() {

@@ -49,6 +49,7 @@ Ext.define('MyApp.controller.Login', {
 
 									// raise a event on the controller when finished
 									loginController.fireEvent('login', userinfo);
+									loginController.fireEvent('ready', userinfo);
 								}
 
 								// we did not receive valid data from the server
@@ -96,7 +97,7 @@ Ext.define('MyApp.controller.Login', {
 			if(userinfo) {
 				// callback, if she is
 				loginController.userinfo = userinfo;
-				loginController.fireEvent('login', userinfo);
+				loginController.fireEvent('ready', userinfo);
 				return callback(userinfo);
 			}
 
