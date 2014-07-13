@@ -19,13 +19,13 @@ Ext.define('MyApp.helper.DjangoProxy', {
 	},
 
 	getParams: function(operation) {
-		var
-			params = this.callParent(arguments),
-			filters = operation.getFilters();
+		var params = this.callParent(arguments);
 
 		if (!operation.isReadOperation) {
 			return params;
 		}
+
+		var filters = operation.getFilters();
 
 		delete params[this.getFilterParam()];
 
