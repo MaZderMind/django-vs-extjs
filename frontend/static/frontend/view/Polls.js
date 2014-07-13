@@ -5,6 +5,7 @@ Ext.define('MyApp.view.Polls', {
 
 	// store the grid is bound to
 	store: 'Polls',
+	autoLoad: true,
 
 	// paging bar
 	dockedItems: [{
@@ -35,13 +36,6 @@ Ext.define('MyApp.view.Polls', {
 		// enable filterin in the column headers
 		'gridfilters'
 	],
-
-	listeners: {
-		beforerender: function() {
-			// load store-content when the user first visits the view
-			this.store.load();
-		}
-	},
 
 	// configure columns
 	columns: [
